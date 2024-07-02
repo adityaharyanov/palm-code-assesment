@@ -10,29 +10,89 @@ import 'book_repository_test.mocks.dart';
 @GenerateNiceMocks([MockSpec<DioPackage>()])
 main() {
   group("BookRepository", () {
-    test("getBooks : when result found then return Books model", () async {
-      var apiService = MockDioPackage();
-      var sut = BookRepository(apiService);
+    group("fetchBooks", () {
+      test("fetchBooks : when result found then return Books model", () async {
+        var apiService = MockDioPackage();
+        var sut = BookRepository(apiService);
 
-      when(apiService.get("/books")).thenAnswer((_) async => booksJson);
+        when(apiService.get("/books")).thenAnswer((_) async => booksJson);
 
-      var result = await sut.getBooks();
+        var result = await sut.fetchBooks();
 
-      verify(apiService.get("/books")).called(1);
-      expect(result, isNotNull);
-      expect(result, isA<Books>());
+        verify(apiService.get("/books")).called(1);
+        expect(result, isNotNull);
+        expect(result, isA<Books>());
+      });
+
+      test("fetchBooks : when result not found then return null", () async {
+        var apiService = MockDioPackage();
+        var sut = BookRepository(apiService);
+
+        when(apiService.get("/books")).thenAnswer((_) async => null);
+
+        var result = await sut.fetchBooks();
+
+        verify(apiService.get("/books")).called(1);
+        expect(result, isNull);
+      });
     });
 
-    test("getBooks : when result not found then return null", () async {
-      var apiService = MockDioPackage();
-      var sut = BookRepository(apiService);
+    group("fetchBook with id", () {
+      test("fetchBook with id : when result found then return Book model",
+          () async {
+        var apiService = MockDioPackage();
+        var sut = BookRepository(apiService);
 
-      when(apiService.get("/books")).thenAnswer((_) async => null);
+        when(apiService.get("/books/1513")).thenAnswer((_) async => bookJson);
 
-      var result = await sut.getBooks();
+        var result = await sut.fetchBook(id: 1513);
 
-      verify(apiService.get("/books")).called(1);
-      expect(result, isNull);
+        verify(apiService.get("/books/1513")).called(1);
+        expect(result, isNotNull);
+        expect(result, isA<Book>());
+      });
+
+      test("fetchBook with id : when result not found then return null",
+          () async {
+        var apiService = MockDioPackage();
+        var sut = BookRepository(apiService);
+
+        when(apiService.get("/books/9999")).thenAnswer((_) async => null);
+
+        var result = await sut.fetchBook(id: 9999);
+
+        verify(apiService.get("/books/9999")).called(1);
+        expect(result, isNull);
+      });
+    });
+
+    group("searchBooks", () {
+      test("searchBooks : when result found then return Books model", () async {
+        var apiService = MockDioPackage();
+        var sut = BookRepository(apiService);
+
+        when(apiService.get("/books?search=mybook"))
+            .thenAnswer((_) async => booksJson);
+
+        var result = await sut.searchBooks(query: "mybook");
+
+        verify(apiService.get("/books?search=mybook")).called(1);
+        expect(result, isNotNull);
+        expect(result, isA<Books>());
+      });
+
+      test("searchBooks : when result not found then return null", () async {
+        var apiService = MockDioPackage();
+        var sut = BookRepository(apiService);
+
+        when(apiService.get("/books?search=mybook"))
+            .thenAnswer((_) async => null);
+
+        var result = await sut.searchBooks(query: "mybook");
+
+        verify(apiService.get("/books?search=mybook")).called(1);
+        expect(result, isNull);
+      });
     });
   });
 }
