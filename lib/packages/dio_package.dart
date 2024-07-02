@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:palm_code_assessment/data/api_service_interface.dart';
 
-class DioPackage {
+class DioPackage implements ApiServiceInterface {
   final dio = Dio();
 
   DioPackage() {
@@ -9,6 +10,7 @@ class DioPackage {
     dio.options.receiveTimeout = const Duration(seconds: 3);
   }
 
+  @override
   Future<T?> get<T>(String url) async {
     var response = await dio.get<T>(url);
     return response.data;
