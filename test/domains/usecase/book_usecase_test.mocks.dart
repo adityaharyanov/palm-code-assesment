@@ -9,6 +9,9 @@ import 'package:mockito/mockito.dart' as _i1;
 import 'package:palm_code_assessment/data/models/book.dart' as _i4;
 import 'package:palm_code_assessment/data/repositories/book_repository.dart'
     as _i2;
+import 'package:palm_code_assessment/data/repositories/favourite_repository.dart'
+    as _i5;
+import 'package:palm_code_assessment/domains/models/book.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -28,10 +31,18 @@ import 'package:palm_code_assessment/data/repositories/book_repository.dart'
 /// See the documentation for Mockito's code generation for more information.
 class MockBookRepository extends _i1.Mock implements _i2.BookRepository {
   @override
-  _i3.Future<_i4.Books?> fetchBooks() => (super.noSuchMethod(
+  _i3.Future<_i4.Books?> fetchBooks({
+    int? page = 1,
+    int? size = 15,
+  }) =>
+      (super.noSuchMethod(
         Invocation.method(
           #fetchBooks,
           [],
+          {
+            #page: page,
+            #size: size,
+          },
         ),
         returnValue: _i3.Future<_i4.Books?>.value(),
         returnValueForMissingStub: _i3.Future<_i4.Books?>.value(),
@@ -59,4 +70,47 @@ class MockBookRepository extends _i1.Mock implements _i2.BookRepository {
         returnValue: _i3.Future<_i4.Books?>.value(),
         returnValueForMissingStub: _i3.Future<_i4.Books?>.value(),
       ) as _i3.Future<_i4.Books?>);
+}
+
+/// A class which mocks [FavouriteRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFavouriteRepository extends _i1.Mock
+    implements _i5.FavouriteRepository {
+  @override
+  Map<int, _i4.Book> get favourited => (super.noSuchMethod(
+        Invocation.getter(#favourited),
+        returnValue: <int, _i4.Book>{},
+        returnValueForMissingStub: <int, _i4.Book>{},
+      ) as Map<int, _i4.Book>);
+
+  @override
+  set favourited(Map<int, _i4.Book>? _favourited) => super.noSuchMethod(
+        Invocation.setter(
+          #favourited,
+          _favourited,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  _i3.Future<void> toggleFavourite(_i6.Book? item) => (super.noSuchMethod(
+        Invocation.method(
+          #toggleFavourite,
+          [item],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+
+  @override
+  _i3.Future<Map<int, _i6.Book>> getFavourites() => (super.noSuchMethod(
+        Invocation.method(
+          #getFavourites,
+          [],
+        ),
+        returnValue: _i3.Future<Map<int, _i6.Book>>.value(<int, _i6.Book>{}),
+        returnValueForMissingStub:
+            _i3.Future<Map<int, _i6.Book>>.value(<int, _i6.Book>{}),
+      ) as _i3.Future<Map<int, _i6.Book>>);
 }

@@ -6,8 +6,8 @@ class DioPackage implements ApiServiceInterface {
 
   DioPackage() {
     dio.options.baseUrl = 'https://gutendex.com';
-    dio.options.connectTimeout = const Duration(seconds: 5);
-    dio.options.receiveTimeout = const Duration(seconds: 3);
+    dio.options.connectTimeout = const Duration(seconds: 15);
+    dio.options.receiveTimeout = const Duration(seconds: 10);
   }
 
   @override

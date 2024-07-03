@@ -15,11 +15,12 @@ main() {
         var apiService = MockDioPackage();
         var sut = BookRepository(apiService);
 
-        when(apiService.get("/books")).thenAnswer((_) async => booksJson);
+        when(apiService.get("/books/?page=1"))
+            .thenAnswer((_) async => booksJson);
 
         var result = await sut.fetchBooks();
 
-        verify(apiService.get("/books")).called(1);
+        verify(apiService.get("/books/?page=1")).called(1);
         expect(result, isNotNull);
         expect(result, isA<Books>());
       });
@@ -28,12 +29,26 @@ main() {
         var apiService = MockDioPackage();
         var sut = BookRepository(apiService);
 
-        when(apiService.get("/books")).thenAnswer((_) async => null);
+        when(apiService.get("/books/?page=1")).thenAnswer((_) async => null);
 
         var result = await sut.fetchBooks();
 
-        verify(apiService.get("/books")).called(1);
+        verify(apiService.get("/books/?page=1")).called(1);
         expect(result, isNull);
+      });
+
+      test("fetchBooks : when result found then return Books model", () async {
+        var apiService = MockDioPackage();
+        var sut = BookRepository(apiService);
+
+        when(apiService.get("/books/?page=5"))
+            .thenAnswer((_) async => booksJson);
+
+        var result = await sut.fetchBooks(page: 5);
+
+        verify(apiService.get("/books/?page=5")).called(1);
+        expect(result, isNotNull);
+        expect(result, isA<Books>());
       });
     });
 

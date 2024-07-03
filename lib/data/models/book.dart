@@ -2,8 +2,8 @@ import "package:palm_code_assessment/domains/models/book.dart" as domain;
 
 class Author {
   final String name;
-  final int birthYear;
-  final int deathYear;
+  final int? birthYear;
+  final int? deathYear;
 
   Author(
       {required this.name, required this.birthYear, required this.deathYear});
@@ -13,6 +13,22 @@ class Author {
       name: json['name'],
       birthYear: json['birth_year'],
       deathYear: json['death_year'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'birth_year': birthYear,
+      'death_year': deathYear,
+    };
+  }
+
+  factory Author.fromDomain(domain.Author author) {
+    return Author(
+      name: author.name,
+      birthYear: author.birthYear,
+      deathYear: author.deathYear,
     );
   }
 
@@ -56,6 +72,30 @@ class Book {
       languages: json['languages'].cast<String>(),
       formats: json['formats'].cast<String, String>(),
       downloadCount: json['download_count'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'authors': authors.map((e) => e.toJson()).toList(),
+      'subjects': subjects,
+      'languages': languages,
+      'formats': formats,
+      'download_count': downloadCount,
+    };
+  }
+
+  factory Book.fromDomain(domain.Book book) {
+    return Book(
+      id: book.id,
+      title: book.title,
+      authors: book.authors.map((e) => Author.fromDomain(e)).toList(),
+      subjects: book.subjects,
+      languages: book.languages,
+      formats: book.formats,
+      downloadCount: book.downloadCount,
     );
   }
 

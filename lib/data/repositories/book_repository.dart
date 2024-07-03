@@ -6,8 +6,8 @@ class BookRepository {
 
   BookRepository(ApiServiceInterface apiService) : _apiService = apiService;
 
-  Future<Books?> fetchBooks() async {
-    final response = await _apiService.get<Response>("/books");
+  Future<Books?> fetchBooks({int page = 1, int size = 15}) async {
+    final response = await _apiService.get<Response>("/books/?page=$page");
 
     if (response == null) {
       return null;

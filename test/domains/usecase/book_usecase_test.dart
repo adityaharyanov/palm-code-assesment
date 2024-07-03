@@ -3,94 +3,98 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:palm_code_assessment/data/repositories/book_repository.dart';
 import 'package:palm_code_assessment/data/models/book.dart' as data;
+import 'package:palm_code_assessment/data/repositories/favourite_repository.dart';
 import 'package:palm_code_assessment/domains/models/book.dart';
 import 'package:palm_code_assessment/domains/usecase/book_usecase.dart';
 
 import 'book_usecase_test.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<BookRepository>()])
+@GenerateNiceMocks(
+    [MockSpec<BookRepository>(), MockSpec<FavouriteRepository>()])
+(BookUseCase, BookRepository, FavouriteRepository) _prepareSUT() {
+  var bookRepository = MockBookRepository();
+  var favouriteRepository = MockFavouriteRepository();
+  return (
+    BookUseCase(bookRepository, favouriteRepository),
+    bookRepository,
+    favouriteRepository
+  );
+}
+
 main() {
   group('BookUsecase', () {
     group("getBooks", () {
       test("Should return a list of books", () {
-        var bookRepository = MockBookRepository();
-        var sut = BookUseCase(bookRepository);
+        var sut = _prepareSUT();
 
-        when(bookRepository.fetchBooks())
-            .thenAnswer((_) async => Future.value(books));
+        when(sut.$2.fetchBooks()).thenAnswer((_) async => Future.value(books));
 
-        var result = sut.getBooks();
+        var result = sut.$1.getBooks();
 
-        verify(bookRepository.fetchBooks()).called(1);
+        verify(sut.$2.fetchBooks()).called(1);
         expect(result, isNotNull);
         expect(result, isA<Future<BookPage?>>());
       });
       test("should return null when result not found", () async {
-        var bookRepository = MockBookRepository();
-        var sut = BookUseCase(bookRepository);
+        var sut = _prepareSUT();
 
-        when(bookRepository.fetchBooks())
-            .thenAnswer((_) async => Future.value(null));
+        when(sut.$2.fetchBooks()).thenAnswer((_) async => Future.value(null));
 
-        var result = await sut.getBooks();
+        var result = await sut.$1.getBooks();
 
-        verify(bookRepository.fetchBooks()).called(1);
+        verify(sut.$2.fetchBooks()).called(1);
         expect(result, isNull);
       });
     });
     group("getBookById", () {
       test("should return a book", () async {
-        var bookRepository = MockBookRepository();
-        var sut = BookUseCase(bookRepository);
+        var sut = _prepareSUT();
 
-        when(bookRepository.fetchBook(id: 1315))
+        when(sut.$2.fetchBook(id: 1315))
             .thenAnswer((_) async => Future.value(book));
 
-        var result = await sut.getBookById(id: 1315);
+        var result = await sut.$1.getBookById(id: 1315);
 
-        verify(bookRepository.fetchBook(id: 1315)).called(1);
+        verify(sut.$2.fetchBook(id: 1315)).called(1);
         expect(result, isNotNull);
         expect(result, isA<Book?>());
       });
 
       test("should return null when result not found", () async {
-        var bookRepository = MockBookRepository();
-        var sut = BookUseCase(bookRepository);
+        var sut = _prepareSUT();
 
-        when(bookRepository.fetchBook(id: 9999))
+        when(sut.$2.fetchBook(id: 9999))
             .thenAnswer((_) async => Future.value(null));
 
-        var result = await sut.getBookById(id: 9999);
+        var result = await sut.$1.getBookById(id: 9999);
 
-        verify(bookRepository.fetchBook(id: 9999)).called(1);
+        verify(sut.$2.fetchBook(id: 9999)).called(1);
         expect(result, isNull);
       });
     });
     group("searchBooks", () {
       test("should return a list of books", () async {
-        var bookRepository = MockBookRepository();
-        var sut = BookUseCase(bookRepository);
+        var sut = _prepareSUT();
 
-        when(bookRepository.searchBooks(query: "Romeo"))
+        when(sut.$2.searchBooks(query: "Romeo"))
             .thenAnswer((_) async => Future.value(books));
 
-        var result = await sut.searchBooks(query: "Romeo");
+        var result = await sut.$1.searchBooks(query: "Romeo");
 
-        verify(bookRepository.searchBooks(query: "Romeo")).called(1);
+        verify(sut.$2.searchBooks(query: "Romeo")).called(1);
         expect(result, isNotNull);
         expect(result, isA<BookPage?>());
       });
 
       test("should return null when result not found", () async {
-        var bookRepository = MockBookRepository();
-        var sut = BookUseCase(bookRepository);
+        var sut = _prepareSUT();
 
-        when(bookRepository.searchBooks(query: "Romeo"))
+        when(sut.$2.searchBooks(query: "Romeo"))
             .thenAnswer((_) async => Future.value(null));
 
-        var result = await sut.searchBooks(query: "Romeo");
+        var result = await sut.$1.searchBooks(query: "Romeo");
 
-        verify(bookRepository.searchBooks(query: "Romeo")).called(1);
+        verify(sut.$2.searchBooks(query: "Romeo")).called(1);
         expect(result, isNull);
       });
     });
