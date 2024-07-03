@@ -1,3 +1,5 @@
+import "package:palm_code_assessment/domains/models/book.dart" as domain;
+
 class Author {
   final String name;
   final int birthYear;
@@ -11,6 +13,14 @@ class Author {
       name: json['name'],
       birthYear: json['birth_year'],
       deathYear: json['death_year'],
+    );
+  }
+
+  domain.Author toDomain() {
+    return domain.Author(
+      name: name,
+      birthYear: birthYear,
+      deathYear: deathYear,
     );
   }
 }
@@ -48,6 +58,18 @@ class Book {
       downloadCount: json['download_count'],
     );
   }
+
+  domain.Book toDomain() {
+    return domain.Book(
+      id: id,
+      title: title,
+      authors: authors.map((e) => e.toDomain()).toList(),
+      subjects: subjects,
+      languages: languages,
+      formats: formats,
+      downloadCount: downloadCount,
+    );
+  }
 }
 
 class Books {
@@ -67,6 +89,15 @@ class Books {
       next: json['next'],
       previous: json['previous'],
       results: booksList,
+    );
+  }
+
+  domain.BookPage toDomain() {
+    return domain.BookPage(
+      count: count,
+      next: next,
+      previous: previous,
+      results: results.map((e) => e.toDomain()).toList(),
     );
   }
 }
